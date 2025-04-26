@@ -96,6 +96,27 @@ const registerUser = async (req, res) => {
 // Route handler for admin login
 const adminLogin = async (req, res) => {
   // Logic for admin login will go here
+  // crete email and password in in req.body
+
+  try {
+    const { email, password } = req.body;
+
+    // check email and password woth env file is right
+    if (
+      email === process.env.ADMIN_EMAIL &&
+      password === process.env.ADMIN_PASSWORD
+    ) {
+      // create a token using jwt.sign(email+password, process.env.JWT_SECRE)
+      const token = jwt.sign(email + password, process.env.JWT_SECRET);
+      // send resopnse
+      res.json({ success: true, token });
+    } else {
+      res.json({ success: false, message: "Invalid Creddential" });
+    }
+  } catch (error) {
+    console.log(error);
+    res.json({ success: false, message: error.message });
+  }
 };
 
 // Exporting the route handlers for use in other files
